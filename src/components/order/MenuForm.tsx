@@ -1,6 +1,11 @@
+import { Box, Button, Text } from "@chakra-ui/react";
 import { useFormik } from "formik";
+import { useEffect, useState } from "react";
+import { useLiff } from "react-liff";
 import { beverages } from "../../constants/beverages";
 import { foods } from "../../constants/foods";
+import { convertToPriceText } from "../../helpers/convertToPriceText";
+import { countQtyByType } from "../../helpers/countQtyByType";
 import { Menu } from "../../types/menu";
 
 import MenuList, { OrderMenuListProps } from "./MenuList";
@@ -38,12 +43,51 @@ const INITIAL_VALUES: MenuFormValueType = {
 };
 
 const MenuForm = () => {
+  const [displayName, setDisplayName] = useState("");
+  const { error, liff, isLoggedIn, ready } = useLiff();
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    async () => {
+      const profile = await liff.getProfile();
+      setDisplayName(profile.displayName);
+    };
+  }, [liff, isLoggedIn]);
+
   const { values, handleSubmit, setFieldValue, dirty, resetForm } = useFormik<
     MenuFormValueType
   >({
     initialValues: INITIAL_VALUES,
     onSubmit: (formValues: MenuFormValueType) => {
-      console.log({ formValues });
+      const orderedItems = formValues.items.filter((item) => item.qty > 0);
+      const totalFoodQty = countQtyByType(formValues.items, MenuItemType.food);
+      const totalBeverageQty = countQtyByType(
+        formValues.items,
+        MenuItemType.beverage
+      );
+
+      const totalOrderValue = orderedItems.reduce(
+        (prev, curr) => prev + curr.price * curr.qty,
+        0
+      );
+
+      const messageTemplate = `Hai ${displayName},\nTerima kasih telah memesan makanan, berikut adalah review pesanannya:\n\n${
+        totalFoodQty > 0 ? `\n* ${totalFoodQty} Makanan` : ""
+      }${
+        totalBeverageQty > 0 ? `\n* ${totalBeverageQty} Minuman` : ""
+      }\n\nTotal : ${convertToPriceText(
+        totalOrderValue
+      )}\nPesanan Anda akan segera diproses dan akan diberitahu jika sudah bisa diambil.\n\nMohon ditunggu ya!`;
+
+      liff.sendMessages([
+        {
+          type: "text",
+          text: messageTemplate,
+        },
+      ]);
+
+      liff.closeWindow();
     },
   });
 
@@ -57,13 +101,46 @@ const MenuForm = () => {
     handleSubmit,
   };
 
+  if (error) {
+    return <Text>Something is Wrong</Text>;
+  }
+
+  if (!ready) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <>
+        <Button onClick={() => liff.login()}>Login</Button>
+      </>
+    );
+  }
+
   return (
-    <>
+    <Box>
+      {displayName && (
+        <Text>
+          Halo <b>{displayName}</b>! Yuk pesan makanan di bawah ini
+        </Text>
+      )}
       <MenuList {...orderMenuListProps} />
       {values.items.filter((item) => item.qty > 0).length > 0 ? (
         <OrderSummary {...orderSummaryProps} />
       ) : null}
-    </>
+
+      <Box marginY={4}>
+        <Text
+          textAlign="center"
+          fontStyle="underline"
+          onClick={() =>
+            liff.openWindow({ url: "https://liff.line.me/1655424639-rqawGn7X" })
+          }
+        >
+          Buka di external Browser
+        </Text>
+      </Box>
+    </Box>
   );
 };
 

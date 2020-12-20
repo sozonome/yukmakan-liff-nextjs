@@ -1,7 +1,9 @@
 import { FormEvent } from "react";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+
 import { convertToPriceText } from "../../helpers/convertToPriceText";
-import { MenuFormValueType } from "./MenuForm";
+import { MenuFormValueType, MenuItemType } from "./MenuForm";
+import { countQtyByType } from "../../helpers/countQtyByType";
 
 export type OrderSummaryProps = {
   values: MenuFormValueType;
@@ -9,6 +11,9 @@ export type OrderSummaryProps = {
 };
 
 const OrderSummary = ({ values, handleSubmit }: OrderSummaryProps) => {
+  const totalFoodQty = countQtyByType(values.items, MenuItemType.food);
+  const totalBeverageQty = countQtyByType(values.items, MenuItemType.beverage);
+
   const totalOrderValue = values.items.reduce(
     (prev, curr) => prev + curr.qty * curr.price,
     0
@@ -21,7 +26,23 @@ const OrderSummary = ({ values, handleSubmit }: OrderSummaryProps) => {
         Ringkasan
       </Heading>
 
-      <Text>{convertToPriceText(totalOrderValue)}</Text>
+      <Flex>
+        <Box>
+          <Text>
+            {totalFoodQty > 0 && `${totalFoodQty} makanan`}{" "}
+            {totalFoodQty > 0 && totalBeverageQty > 0 && ` dan `}{" "}
+            {totalBeverageQty > 0 && `${totalBeverageQty} minuman`}{" "}
+          </Text>
+
+          <Text>Total: {convertToPriceText(totalOrderValue)}</Text>
+        </Box>
+
+        <Box marginLeft="auto">
+          <Button colorScheme="green" onClick={() => handleSubmit()}>
+            Pesan Sekarang
+          </Button>
+        </Box>
+      </Flex>
     </Box>
   );
 };
