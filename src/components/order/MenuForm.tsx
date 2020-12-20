@@ -51,12 +51,10 @@ const MenuForm = () => {
   useEffect(() => {
     if (!isLoggedIn) return;
 
-    async () => {
-      await liff.getProfile().then((profile) => {
-        console.log(profile);
-        setDisplayName(profile.displayName);
-      });
-    };
+    (async () => {
+      const profile = await liff.getProfile();
+      setDisplayName(profile.displayName);
+    })();
   }, [liff, isLoggedIn]);
 
   const { values, handleSubmit, setFieldValue, dirty, resetForm } = useFormik<
