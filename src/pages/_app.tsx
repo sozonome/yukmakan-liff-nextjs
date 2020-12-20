@@ -5,7 +5,6 @@ import { LiffProvider } from "react-liff";
 import Layout from "../components/layout";
 
 import customTheme from "../styles/customTheme";
-import "../styles/globals.css";
 
 const liffId = process.env.MY_LIFF_ID;
 const stubEnabled = process.env.NODE_ENV !== "production";

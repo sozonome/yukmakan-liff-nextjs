@@ -4,6 +4,7 @@ const Meta = () => {
   return (
     <Head>
       <title>YukMakan!</title>
+      <link rel="icon" href="/take-away.png" />
     </Head>
   );
 };

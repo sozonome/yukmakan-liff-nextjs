@@ -5,7 +5,7 @@ const Footer = () => {
     <Flex as="footer" width="full" align="center">
       <Text>
         2020 -{" "}
-        <Link href="https://sznm.dev" isExternal>
+        <Link href="https://sznm.dev" fontWeight="bold" isExternal>
           sznm.dev
         </Link>
       </Text>

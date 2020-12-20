@@ -1,8 +1,7 @@
 import Document, { Html, Head, Main, NextScript } from "next/document";
 
 const APP_NAME = "YukMakan!";
-const APP_DESCRIPTION =
-  "Pesan makanan langsung dari LINE";
+const APP_DESCRIPTION = "Pesan makanan langsung dari LINE";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx) {
