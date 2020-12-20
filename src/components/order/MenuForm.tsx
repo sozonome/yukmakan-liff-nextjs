@@ -210,8 +210,8 @@ const MenuForm = () => {
         <OrderSummary {...orderSummaryProps} />
       ) : null}
 
-      {liff.isInClient() ? (
-        <Box marginY={4}>
+      <Box marginY={4}>
+        {liff.isInClient() ? (
           <Button
             isFullWidth
             colorScheme="orange"
@@ -222,17 +222,18 @@ const MenuForm = () => {
                 url: "https://yukmakan-order-line.sznm.dev/",
               })
             }
+            marginBottom={4}
           >
             Buka di Browser Eksternal
           </Button>
-        </Box>
-      ) : null}
+        ) : null}
 
-      {liff.isLoggedIn() && (
-        <Button isFullWidth onClick={() => liff.logout()}>
-          Logout
-        </Button>
-      )}
+        {liff.isLoggedIn() && (
+          <Button isFullWidth onClick={() => liff.logout()}>
+            Logout
+          </Button>
+        )}
+      </Box>
 
       <Modal
         isOpen={isOpen}
