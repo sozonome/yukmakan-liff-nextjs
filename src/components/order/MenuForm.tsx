@@ -1,4 +1,20 @@
-import { Box, Button, Flex, Text, useToast } from "@chakra-ui/react";
+import {
+  Avatar,
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useLiff } from "react-liff";
@@ -6,6 +22,7 @@ import { FaLine } from "react-icons/fa";
 
 import MenuList, { OrderMenuListProps } from "./MenuList";
 import OrderSummary, { OrderSummaryProps } from "./OrderSummary";
+import MenuItem from "./MenuItem";
 
 import { beverages } from "../../constants/beverages";
 import { foods } from "../../constants/foods";
@@ -46,8 +63,16 @@ const INITIAL_VALUES: MenuFormValueType = {
 };
 
 const MenuForm = () => {
-  const [displayName, setDisplayName] = useState("");
+  const [displayName, setDisplayName] = useState<string>("");
+  const [profileImg, setProfileImg] = useState<string>("");
+
+  const [orderedItems, setOrderedItems] = useState<OrderedItemType[]>([]);
+  const [totalFoodQty, setTotalFoodQty] = useState<number>(0);
+  const [totalBeverageQty, setTotalBeverageQty] = useState<number>(0);
+  const [totalOrderValue, setTotalOrderValue] = useState<number>(0);
+
   const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { error, liff, isLoggedIn, ready } = useLiff();
 
   useEffect(() => {
@@ -56,6 +81,9 @@ const MenuForm = () => {
     (async () => {
       const profile = await liff.getProfile();
       setDisplayName(profile.displayName);
+      if (profile.pictureUrl) {
+        setProfileImg(profile.pictureUrl);
+      }
     })();
   }, [liff, isLoggedIn]);
 
@@ -63,19 +91,7 @@ const MenuForm = () => {
     MenuFormValueType
   >({
     initialValues: INITIAL_VALUES,
-    onSubmit: (formValues: MenuFormValueType) => {
-      const orderedItems = formValues.items.filter((item) => item.qty > 0);
-      const totalFoodQty = countQtyByType(formValues.items, MenuItemType.food);
-      const totalBeverageQty = countQtyByType(
-        formValues.items,
-        MenuItemType.beverage
-      );
-
-      const totalOrderValue = orderedItems.reduce(
-        (prev, curr) => prev + curr.price * curr.qty,
-        0
-      );
-
+    onSubmit: () => {
       const messageTemplate = `Hai ${displayName},\nTerima kasih telah memesan makanan di YukMakan!, berikut adalah review pesanannya:\n${
         totalFoodQty > 0 ? `\n* ${totalFoodQty} Makanan:` : ""
       }${
@@ -127,6 +143,18 @@ const MenuForm = () => {
     },
   });
 
+  useEffect(() => {
+    const orderedItems = values.items.filter((item) => item.qty > 0);
+    setOrderedItems(orderedItems);
+    setTotalFoodQty(countQtyByType(orderedItems, MenuItemType.food));
+    setTotalBeverageQty(countQtyByType(orderedItems, MenuItemType.beverage));
+    const totalOrderValue = orderedItems.reduce(
+      (prev, curr) => prev + curr.price * curr.qty,
+      0
+    );
+    setTotalOrderValue(totalOrderValue);
+  }, [values]);
+
   const orderMenuListProps: OrderMenuListProps = {
     values,
     setFieldValue,
@@ -134,7 +162,7 @@ const MenuForm = () => {
 
   const orderSummaryProps: OrderSummaryProps = {
     values,
-    handleSubmit,
+    onOpen,
   };
 
   if (error) {
@@ -149,6 +177,7 @@ const MenuForm = () => {
     return (
       <Flex alignItems="center" height="30vh">
         <Button
+          colorScheme="green"
           isFullWidth
           size="lg"
           leftIcon={<FaLine fontSize="2rem" />}
@@ -163,9 +192,18 @@ const MenuForm = () => {
   return (
     <Box>
       {displayName && (
-        <Text>
-          Halo <b>{displayName}</b>! Yuk pesan makanan di bawah ini
-        </Text>
+        <Flex alignItems="center">
+          {profileImg && (
+            <Box marginRight={2}>
+              <Avatar src={profileImg} />
+            </Box>
+          )}
+          <Box>
+            <Text>
+              Halo <b>{displayName}</b>! Yuk pesan makanan di bawah ini
+            </Text>
+          </Box>
+        </Flex>
       )}
       <MenuList {...orderMenuListProps} />
       {values.items.filter((item) => item.qty > 0).length > 0 ? (
@@ -185,7 +223,7 @@ const MenuForm = () => {
               })
             }
           >
-            Buka di external Browser
+            Buka di Browser Eksternal
           </Button>
         </Box>
       ) : null}
@@ -195,6 +233,55 @@ const MenuForm = () => {
           Logout
         </Button>
       )}
+
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered
+        motionPreset="slideInBottom"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Sudah Yakin dengan Pesanan Anda?</ModalHeader>
+          <ModalCloseButton />
+
+          <ModalBody>
+            {totalFoodQty > 0 && (
+              <Box marginBottom={6}>
+                <Text fontSize="lg">{totalFoodQty} makanan:</Text>
+                {orderedItems
+                  .filter((item) => item.type === MenuItemType.food)
+                  .map((food, index) => (
+                    <MenuItem item={food} key={index} />
+                  ))}
+              </Box>
+            )}
+            {totalBeverageQty > 0 && (
+              <Box>
+                <Text fontSize="lg">{totalBeverageQty} minuman:</Text>
+                {orderedItems
+                  .filter((item) => item.type === MenuItemType.beverage)
+                  .map((beverage, index) => (
+                    <MenuItem item={beverage} key={index} />
+                  ))}
+              </Box>
+            )}
+
+            <Heading fontSize="xl" textAlign="right">
+              Total: {convertToPriceText(totalOrderValue)}
+            </Heading>
+          </ModalBody>
+
+          <ModalFooter>
+            <Text fontWeight="bold" onClick={onClose} marginRight={4}>
+              Kembali
+            </Text>
+            <Button colorScheme="green" onClick={() => handleSubmit()}>
+              Pesan
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

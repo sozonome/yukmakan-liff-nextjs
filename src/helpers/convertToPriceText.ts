@@ -1,6 +1,8 @@
 export const convertToPriceText = (value: number) => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
+  return value.toLocaleString("id-ID", {
     currency: "IDR",
-  }).format(value);
+    style: "currency",
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0,
+  });
 };

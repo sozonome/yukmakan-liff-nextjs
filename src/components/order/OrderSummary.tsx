@@ -8,10 +8,10 @@ import { MenuFormValueType, MenuItemType } from "./MenuForm";
 
 export type OrderSummaryProps = {
   values: MenuFormValueType;
-  handleSubmit: (e?: FormEvent<HTMLFormElement>) => void;
+  onOpen: () => void;
 };
 
-const OrderSummary = ({ values, handleSubmit }: OrderSummaryProps) => {
+const OrderSummary = ({ values, onOpen }: OrderSummaryProps) => {
   const totalFoodQty = countQtyByType(values.items, MenuItemType.food);
   const totalBeverageQty = countQtyByType(values.items, MenuItemType.beverage);
 
@@ -39,7 +39,7 @@ const OrderSummary = ({ values, handleSubmit }: OrderSummaryProps) => {
         </Box>
 
         <Box marginLeft="auto">
-          <Button colorScheme="green" onClick={() => handleSubmit()}>
+          <Button colorScheme="green" onClick={onOpen}>
             Pesan Sekarang
           </Button>
         </Box>

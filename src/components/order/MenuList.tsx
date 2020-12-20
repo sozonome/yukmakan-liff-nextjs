@@ -16,8 +16,15 @@ export type OrderMenuListProps = {
 
 const MenuList = ({ values, setFieldValue }: OrderMenuListProps) => {
   return (
-    <Box>
-      <Box as="section" id="foods" marginY={6}>
+    <Box textColor="white">
+      <Box
+        as="section"
+        id="foods"
+        marginY={6}
+        borderRadius={12}
+        padding={4}
+        background="linear-gradient(135deg, rgba(0,181,216,1) 0%, rgba(9,135,160,1) 100%);"
+      >
         <Heading as="h2" size="xl" marginBottom={4}>
           Makanan
         </Heading>
@@ -34,7 +41,14 @@ const MenuList = ({ values, setFieldValue }: OrderMenuListProps) => {
           ))}
       </Box>
 
-      <Box as="section" id="beverages" marginY={6}>
+      <Box
+        as="section"
+        id="beverages"
+        marginY={6}
+        borderRadius={12}
+        padding={4}
+        background="linear-gradient(135deg, rgba(128,90,213,1) 0%, rgba(151,38,109,1) 100%);"
+      >
         <Heading as="h2" size="xl">
           Minuman
         </Heading>

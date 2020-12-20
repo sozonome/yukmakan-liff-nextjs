@@ -8,7 +8,7 @@ const Layout = ({ children }) => {
   return (
     <Box margin="0 auto" maxWidth={800} transition="0.5s ease-out">
       <Meta />
-      <Box margin="8">
+      <Box margin={4}>
         <Header />
         <Box as="main" marginY={22}>
           {children}

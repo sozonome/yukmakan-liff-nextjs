@@ -9,8 +9,8 @@ import { OrderMenuListProps } from "./MenuList";
 
 type MenuItemProps = {
   item: OrderedItemType;
-  index: number;
-  setFieldValue: OrderMenuListProps["setFieldValue"];
+  index?: number;
+  setFieldValue?: OrderMenuListProps["setFieldValue"];
 };
 
 const MenuItem = ({ item, setFieldValue, index }: MenuItemProps) => {
@@ -25,31 +25,43 @@ const MenuItem = ({ item, setFieldValue, index }: MenuItemProps) => {
       </Box>
 
       <Flex marginLeft="auto" alignItems="center">
-        <Button
-          size="sm"
-          colorScheme="teal"
-          hidden={item.qty === 0}
-          onClick={() => setFieldValue(`items[${index}].qty`, item.qty - 1)}
-        >
-          <BiMinus />
-        </Button>
+        {setFieldValue && (
+          <Button
+            size="sm"
+            colorScheme="yellow"
+            hidden={item.qty === 0}
+            onClick={() => setFieldValue(`items[${index}].qty`, item.qty - 1)}
+          >
+            <BiMinus />
+          </Button>
+        )}
 
         <Text
           marginX={2}
-          fontWeight="bold"
+          fontWeight={setFieldValue && "bold"}
           fontSize="lg"
           hidden={item.qty === 0}
         >
+          {!setFieldValue && `*`}
           {item.qty}
+          {!setFieldValue && ` =`}
         </Text>
 
-        <Button
-          size="sm"
-          colorScheme="orange"
-          onClick={() => setFieldValue(`items[${index}].qty`, item.qty + 1)}
-        >
-          <BsPlus />
-        </Button>
+        {!setFieldValue && (
+          <Text marginLeft={2}>
+            {convertToPriceText(item.price * item.qty)}
+          </Text>
+        )}
+
+        {setFieldValue && (
+          <Button
+            size="sm"
+            colorScheme="orange"
+            onClick={() => setFieldValue(`items[${index}].qty`, item.qty + 1)}
+          >
+            <BsPlus />
+          </Button>
+        )}
       </Flex>
     </Flex>
   );
