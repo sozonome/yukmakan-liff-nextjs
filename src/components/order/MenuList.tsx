@@ -1,9 +1,9 @@
 import { Box, Heading } from "@chakra-ui/react";
+import { FormikErrors } from "formik";
 
 import MenuItem from "./MenuItem";
 
 import { MenuFormValueType, MenuItemType } from "./MenuForm";
-import { FormikErrors } from "formik";
 
 export type OrderMenuListProps = {
   values: MenuFormValueType;

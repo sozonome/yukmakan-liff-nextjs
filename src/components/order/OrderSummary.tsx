@@ -2,8 +2,9 @@ import { FormEvent } from "react";
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 
 import { convertToPriceText } from "../../helpers/convertToPriceText";
-import { MenuFormValueType, MenuItemType } from "./MenuForm";
 import { countQtyByType } from "../../helpers/countQtyByType";
+
+import { MenuFormValueType, MenuItemType } from "./MenuForm";
 
 export type OrderSummaryProps = {
   values: MenuFormValueType;

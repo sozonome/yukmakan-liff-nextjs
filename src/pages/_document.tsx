@@ -33,11 +33,6 @@ class MyDocument extends Document {
           />
           <link rel="shortcut icon" href="/app-icon.png" /> */}
           <link rel="manifest" href="/manifest.json" />
-          <script
-            defer
-            charSet="utf-8"
-            src="https://static.line-scdn.net/liff/edge/2/sdk.js"
-          ></script>
         </Head>
         <body>
           <Main />

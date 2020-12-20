@@ -3,14 +3,16 @@ import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { useLiff } from "react-liff";
 import { FaLine } from "react-icons/fa";
+
+import MenuList, { OrderMenuListProps } from "./MenuList";
+import OrderSummary, { OrderSummaryProps } from "./OrderSummary";
+
 import { beverages } from "../../constants/beverages";
 import { foods } from "../../constants/foods";
 import { convertToPriceText } from "../../helpers/convertToPriceText";
 import { countQtyByType } from "../../helpers/countQtyByType";
-import { Menu } from "../../types/menu";
 
-import MenuList, { OrderMenuListProps } from "./MenuList";
-import OrderSummary, { OrderSummaryProps } from "./OrderSummary";
+import { Menu } from "../../types/menu";
 
 export enum MenuItemType {
   food = "food",

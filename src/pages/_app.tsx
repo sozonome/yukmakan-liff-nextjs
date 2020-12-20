@@ -2,6 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Head from "next/head";
 import App from "next/app";
 import { LiffProvider } from "react-liff";
+import "fontsource-jost";
 
 import Layout from "../components/layout";
 
