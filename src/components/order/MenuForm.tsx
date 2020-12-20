@@ -76,13 +76,33 @@ const MenuForm = () => {
         0
       );
 
-      const messageTemplate = `Hai ${displayName},\nTerima kasih telah memesan makanan, berikut adalah review pesanannya:\n\n${
-        totalFoodQty > 0 ? `\n* ${totalFoodQty} Makanan` : ""
+      const messageTemplate = `Hai ${displayName},\nTerima kasih telah memesan makanan di YukMakan!, berikut adalah review pesanannya:\n${
+        totalFoodQty > 0 ? `\n* ${totalFoodQty} Makanan:` : ""
       }${
-        totalBeverageQty > 0 ? `\n* ${totalBeverageQty} Minuman` : ""
+        totalFoodQty > 0
+          ? orderedItems
+              .filter((item) => item.type === MenuItemType.food)
+              .map(
+                (food) =>
+                  `\n${food.name} (${convertToPriceText(food.price)}) * ${
+                    food.qty
+                  }`
+              ) + "\n"
+          : null
+      }${totalBeverageQty > 0 ? `\n* ${totalBeverageQty} Minuman` : ""}${
+        totalBeverageQty > 0
+          ? orderedItems
+              .filter((item) => item.type === MenuItemType.beverage)
+              .map(
+                (beverage) =>
+                  `\n${beverage.name}(${convertToPriceText(beverage.price)}) *${
+                    beverage.qty
+                  }`
+              ) + "\n"
+          : null
       }\n\nTotal : ${convertToPriceText(
         totalOrderValue
-      )}\nPesanan Anda akan segera diproses dan akan diberitahu jika sudah bisa diambil.\n\nMohon ditunggu ya!`;
+      )}\n\nPesanan Anda akan segera diproses dan akan diberitahu jika sudah bisa diambil.\n\nMohon ditunggu ya!`;
 
       if (liff.isInClient()) {
         liff.sendMessages([
