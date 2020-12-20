@@ -2,10 +2,19 @@ import { Box, Heading } from "@chakra-ui/react";
 
 import MenuItem from "./MenuItem";
 
-import { beverages } from "../../constants/beverages";
-import { foods } from "../../constants/foods";
+import { MenuFormValueType, MenuItemType } from "./MenuForm";
+import { FormikErrors } from "formik";
 
-const MenuList = () => {
+export type OrderMenuListProps = {
+  values: MenuFormValueType;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean
+  ) => Promise<void> | Promise<FormikErrors<MenuFormValueType>>;
+};
+
+const MenuList = ({ values, setFieldValue }: OrderMenuListProps) => {
   return (
     <Box>
       <Box as="section" id="foods" marginY={6}>
@@ -13,9 +22,16 @@ const MenuList = () => {
           Makanan
         </Heading>
 
-        {foods.map((food, index) => (
-          <MenuItem item={food} key={index} />
-        ))}
+        {values.items
+          .filter((item) => item.type === MenuItemType.food)
+          .map((food, index) => (
+            <MenuItem
+              item={food}
+              key={index}
+              index={index}
+              setFieldValue={setFieldValue}
+            />
+          ))}
       </Box>
 
       <Box as="section" id="beverages" marginY={6}>
@@ -23,9 +39,19 @@ const MenuList = () => {
           Minuman
         </Heading>
 
-        {beverages.map((beverage, index) => (
-          <MenuItem item={beverage} key={index} />
-        ))}
+        {values.items
+          .filter((item) => item.type === MenuItemType.beverage)
+          .map((beverage, index) => (
+            <MenuItem
+              index={
+                values.items.filter((item) => item.type === MenuItemType.food)
+                  .length + index
+              }
+              item={beverage}
+              key={index}
+              setFieldValue={setFieldValue}
+            />
+          ))}
       </Box>
     </Box>
   );

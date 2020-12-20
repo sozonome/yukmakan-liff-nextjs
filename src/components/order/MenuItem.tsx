@@ -1,15 +1,19 @@
 import { Box, Button, Flex, Text } from "@chakra-ui/react";
-import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import { BsPlus } from "react-icons/bs";
+import { BiMinus } from "react-icons/bi";
 
 import { convertToPriceText } from "../../helpers/convertToPriceText";
 
-import { Menu } from "../../types/menu";
+import { OrderedItemType } from "./MenuForm";
+import { OrderMenuListProps } from "./MenuList";
 
 type MenuItemProps = {
-  item: Menu;
+  item: OrderedItemType;
+  index: number;
+  setFieldValue: OrderMenuListProps["setFieldValue"];
 };
 
-const MenuItem = ({ item }: MenuItemProps) => {
+const MenuItem = ({ item, setFieldValue, index }: MenuItemProps) => {
   return (
     <Flex marginY={2}>
       <Box>
@@ -21,16 +25,30 @@ const MenuItem = ({ item }: MenuItemProps) => {
       </Box>
 
       <Flex marginLeft="auto" alignItems="center">
-        <Button size="sm" colorScheme="teal" hidden={false}>
-          <AiOutlineMinus />
+        <Button
+          size="sm"
+          colorScheme="teal"
+          hidden={item.qty === 0}
+          onClick={() => setFieldValue(`items[${index}].qty`, item.qty - 1)}
+        >
+          <BiMinus />
         </Button>
 
-        <Text marginX={2} fontWeight="bold" fontSize="lg">
-          0
+        <Text
+          marginX={2}
+          fontWeight="bold"
+          fontSize="lg"
+          hidden={item.qty === 0}
+        >
+          {item.qty}
         </Text>
 
-        <Button size="sm" colorScheme="orange" hidden={false}>
-          <AiOutlinePlus />
+        <Button
+          size="sm"
+          colorScheme="orange"
+          onClick={() => setFieldValue(`items[${index}].qty`, item.qty + 1)}
+        >
+          <BsPlus />
         </Button>
       </Flex>
     </Flex>

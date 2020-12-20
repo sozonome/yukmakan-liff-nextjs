@@ -1,15 +1,16 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import Head from "next/head";
+import App from "next/app";
 import { LiffProvider } from "react-liff";
 
 import Layout from "../components/layout";
 
 import customTheme from "../styles/customTheme";
 
-const liffId = process.env.MY_LIFF_ID;
+const LIFF_ID = process.env.MY_LIFF_ID;
 const stubEnabled = process.env.NODE_ENV !== "production";
 
-const MyApp = ({ Component, pageProps }) => {
+const MyApp = ({ Component, pageProps, liffId }) => {
   return (
     <LiffProvider liffId={liffId} stubEnabled={stubEnabled}>
       <ChakraProvider theme={customTheme}>
@@ -25,6 +26,15 @@ const MyApp = ({ Component, pageProps }) => {
       </ChakraProvider>
     </LiffProvider>
   );
+};
+
+MyApp.getInitialProps = async (appContext) => {
+  // calls page's `getInitialProps` and fills `appProps.pageProps`
+  const appProps = await App.getInitialProps(appContext);
+
+  const liffId = LIFF_ID;
+
+  return { ...appProps, liffId };
 };
 
 export default MyApp;
