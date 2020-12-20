@@ -161,7 +161,7 @@ const MenuForm = () => {
             fontStyle="underline"
             onClick={() =>
               liff.openWindow({
-                url: "https://liff.line.me/1655424639-rqawGn7X",
+                url: "https://yukmakan-order-line.sznm.dev/",
               })
             }
           >
