@@ -11,7 +11,7 @@ type MenuItemProps = {
   item: OrderedItemType;
   index?: number;
   setFieldValue?: OrderMenuListProps["setFieldValue"];
-  ready?: boolean;
+  ready: boolean;
 };
 
 const MenuItem = ({ item, ready, index, setFieldValue }: MenuItemProps) => {

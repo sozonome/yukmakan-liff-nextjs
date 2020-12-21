@@ -248,7 +248,7 @@ const MenuForm = () => {
                   {orderedItems
                     .filter((item) => item.type === MenuItemType.food)
                     .map((food, index) => (
-                      <MenuItem item={food} key={index} />
+                      <MenuItem item={food} key={index} ready={ready} />
                     ))}
                 </Box>
               )}
@@ -258,7 +258,7 @@ const MenuForm = () => {
                   {orderedItems
                     .filter((item) => item.type === MenuItemType.beverage)
                     .map((beverage, index) => (
-                      <MenuItem item={beverage} key={index} />
+                      <MenuItem item={beverage} key={index} ready={ready} />
                     ))}
                 </Box>
               )}
@@ -372,7 +372,7 @@ const MenuForm = () => {
                 {orderedItems
                   .filter((item) => item.type === MenuItemType.food)
                   .map((food, index) => (
-                    <MenuItem item={food} key={index} />
+                    <MenuItem item={food} key={index} ready={ready} />
                   ))}
               </Box>
             )}
@@ -382,7 +382,7 @@ const MenuForm = () => {
                 {orderedItems
                   .filter((item) => item.type === MenuItemType.beverage)
                   .map((beverage, index) => (
-                    <MenuItem item={beverage} key={index} />
+                    <MenuItem item={beverage} key={index} ready={ready} />
                   ))}
               </Box>
             )}
