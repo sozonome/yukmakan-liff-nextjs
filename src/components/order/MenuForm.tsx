@@ -121,14 +121,16 @@ const MenuForm = () => {
       )}\n\nPesanan Anda akan segera diproses dan akan diberitahu jika sudah bisa diambil.\n\nMohon ditunggu ya!`;
 
       if (liff.isInClient()) {
-        liff.sendMessages([
-          {
-            type: "text",
-            text: messageTemplate,
-          },
-        ]);
-
-        liff.closeWindow();
+        liff
+          .sendMessages([
+            {
+              type: "text",
+              text: messageTemplate,
+            },
+          ])
+          .then(() => {
+            liff.closeWindow();
+          });
       } else {
         toast({
           title: "Mohon Maaf",
