@@ -1,11 +1,11 @@
 import { Box } from "@chakra-ui/react";
 
-import MenuForm from "../components/order/MenuForm";
+import MenuFormContainer from "../components/order/MenuFormContainer";
 
 const Home = () => {
   return (
     <Box mb={8} w="full">
-      <MenuForm />
+      <MenuFormContainer />
     </Box>
   );
 };

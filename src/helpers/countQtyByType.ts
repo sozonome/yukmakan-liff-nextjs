@@ -1,4 +1,7 @@
-import { MenuItemType, OrderedItemType } from "../components/order/MenuForm";
+import {
+  MenuItemType,
+  OrderedItemType,
+} from "../components/order/MenuFormContainer";
 
 export const countQtyByType = (
   items: OrderedItemType[],

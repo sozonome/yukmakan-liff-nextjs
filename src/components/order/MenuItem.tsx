@@ -4,7 +4,7 @@ import { BiMinus } from "react-icons/bi";
 
 import { convertToPriceText } from "../../helpers/convertToPriceText";
 
-import { OrderedItemType } from "./MenuForm";
+import { OrderedItemType } from "./MenuFormContainer";
 import { OrderMenuListProps } from "./MenuList";
 
 type MenuItemProps = {

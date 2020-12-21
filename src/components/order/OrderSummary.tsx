@@ -4,7 +4,7 @@ import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { convertToPriceText } from "../../helpers/convertToPriceText";
 import { countQtyByType } from "../../helpers/countQtyByType";
 
-import { MenuFormValueType, MenuItemType } from "./MenuForm";
+import { MenuFormValueType, MenuItemType } from "./MenuFormContainer";
 
 export type OrderSummaryProps = {
   values: MenuFormValueType;

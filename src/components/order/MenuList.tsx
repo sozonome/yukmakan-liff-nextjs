@@ -3,7 +3,7 @@ import { FormikErrors } from "formik";
 
 import MenuItem from "./MenuItem";
 
-import { MenuFormValueType, MenuItemType } from "./MenuForm";
+import { MenuFormValueType, MenuItemType } from "./MenuFormContainer";
 
 export type OrderMenuListProps = {
   values: MenuFormValueType;
