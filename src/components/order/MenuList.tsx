@@ -12,9 +12,10 @@ export type OrderMenuListProps = {
     value: any,
     shouldValidate?: boolean
   ) => Promise<void> | Promise<FormikErrors<MenuFormValueType>>;
+  ready: boolean;
 };
 
-const MenuList = ({ values, setFieldValue }: OrderMenuListProps) => {
+const MenuList = ({ ready, values, setFieldValue }: OrderMenuListProps) => {
   return (
     <Box textColor="white">
       <Box
@@ -37,6 +38,7 @@ const MenuList = ({ values, setFieldValue }: OrderMenuListProps) => {
               key={index}
               index={index}
               setFieldValue={setFieldValue}
+              ready={ready}
             />
           ))}
       </Box>
@@ -64,6 +66,7 @@ const MenuList = ({ values, setFieldValue }: OrderMenuListProps) => {
               item={beverage}
               key={index}
               setFieldValue={setFieldValue}
+              ready={ready}
             />
           ))}
       </Box>

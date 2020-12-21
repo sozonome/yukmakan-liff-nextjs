@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Skeleton,
   Text,
   useDisclosure,
   useToast,
@@ -63,8 +64,8 @@ const INITIAL_VALUES: MenuFormValueType = {
 };
 
 const MenuForm = () => {
-  const [displayName, setDisplayName] = useState<string>("");
-  const [profileImg, setProfileImg] = useState<string>("");
+  const [displayName, setDisplayName] = useState<string>(undefined);
+  const [profileImg, setProfileImg] = useState<string>(undefined);
 
   const [orderedItems, setOrderedItems] = useState<OrderedItemType[]>([]);
   const [totalFoodQty, setTotalFoodQty] = useState<number>(0);
@@ -156,6 +157,7 @@ const MenuForm = () => {
   }, [values]);
 
   const orderMenuListProps: OrderMenuListProps = {
+    ready,
     values,
     setFieldValue,
   };
@@ -167,10 +169,6 @@ const MenuForm = () => {
 
   if (error) {
     return <Text>Something is Wrong</Text>;
-  }
-
-  if (!ready) {
-    return <Text>Loading...</Text>;
   }
 
   if (!isLoggedIn) {
@@ -191,20 +189,23 @@ const MenuForm = () => {
 
   return (
     <Box>
-      {displayName && (
-        <Flex alignItems="center">
+      <Flex alignItems="center">
+        <Skeleton isLoaded={ready && profileImg && profileImg.length >= 0}>
           {profileImg && (
             <Box marginRight={2}>
               <Avatar src={profileImg} />
             </Box>
           )}
+        </Skeleton>
+        <Skeleton isLoaded={ready && displayName && displayName.length >= 0}>
           <Box>
             <Text>
               Halo <b>{displayName}</b>! Yuk pesan makanan di bawah ini
             </Text>
           </Box>
-        </Flex>
-      )}
+        </Skeleton>
+      </Flex>
+
       <MenuList {...orderMenuListProps} />
       {values.items.filter((item) => item.qty > 0).length > 0 ? (
         <OrderSummary {...orderSummaryProps} />
