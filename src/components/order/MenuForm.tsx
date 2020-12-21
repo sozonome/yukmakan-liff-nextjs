@@ -169,13 +169,7 @@ const MenuForm = () => {
     onOpen,
   };
 
-  if (error) {
-    console.log({ error, ready, isLoggedIn }, "error");
-    return <Text>Something is Wrong</Text>;
-  }
-
-  if (isLoggedIn) {
-    console.log({ error, ready, isLoggedIn }, "default");
+  const RenderForm = () => {
     return (
       <Box>
         <Skeleton
@@ -282,10 +276,17 @@ const MenuForm = () => {
         </Modal>
       </Box>
     );
+  };
+
+  if (error) {
+    return <Text>Something is Wrong</Text>;
+  }
+
+  if (!ready) {
+    return <RenderForm />;
   }
 
   if (!isLoggedIn) {
-    console.log({ error, ready, isLoggedIn }, "not logged in yet");
     return (
       <Flex alignItems="center" height="30vh">
         <Button
@@ -300,6 +301,8 @@ const MenuForm = () => {
       </Flex>
     );
   }
+
+  return <RenderForm />;
 };
 
 export default MenuForm;
