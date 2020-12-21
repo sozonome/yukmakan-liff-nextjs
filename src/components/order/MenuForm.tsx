@@ -84,6 +84,8 @@ const MenuForm = () => {
       setDisplayName(profile.displayName);
       if (profile.pictureUrl) {
         setProfileImg(profile.pictureUrl);
+      } else {
+        setProfileImg("");
       }
     })();
   }, [liff, isLoggedIn]);
@@ -171,6 +173,115 @@ const MenuForm = () => {
     return <Text>Something is Wrong</Text>;
   }
 
+  if (isLoggedIn) {
+    return (
+      <Box>
+        <Skeleton
+          isLoaded={
+            ready &&
+            profileImg &&
+            profileImg.length >= 0 &&
+            displayName &&
+            displayName.length >= 0
+          }
+          height={12}
+        >
+          <Flex alignItems="center">
+            {profileImg && (
+              <Box marginRight={2}>
+                <Avatar src={profileImg} />
+              </Box>
+            )}
+            <Box>
+              <Text>
+                Halo <b>{displayName}</b>! Yuk pesan makanan di bawah ini
+              </Text>
+            </Box>
+          </Flex>
+        </Skeleton>
+
+        <MenuList {...orderMenuListProps} />
+        {values.items.filter((item) => item.qty > 0).length > 0 ? (
+          <OrderSummary {...orderSummaryProps} />
+        ) : null}
+
+        <Box marginY={4}>
+          {liff.isInClient() ? (
+            <Button
+              isFullWidth
+              colorScheme="orange"
+              textAlign="center"
+              fontStyle="underline"
+              onClick={() =>
+                liff.openWindow({
+                  url: "https://yukmakan-order-line.sznm.dev/",
+                })
+              }
+              marginBottom={4}
+            >
+              Buka di Browser Eksternal
+            </Button>
+          ) : null}
+
+          {liff.isLoggedIn() && (
+            <Button isFullWidth onClick={() => liff.logout()}>
+              Logout
+            </Button>
+          )}
+        </Box>
+
+        <Modal
+          isOpen={isOpen}
+          onClose={onClose}
+          isCentered
+          motionPreset="slideInBottom"
+        >
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Sudah Yakin dengan Pesanan Anda?</ModalHeader>
+            <ModalCloseButton />
+
+            <ModalBody>
+              {totalFoodQty > 0 && (
+                <Box marginBottom={6}>
+                  <Text fontSize="lg">{totalFoodQty} makanan:</Text>
+                  {orderedItems
+                    .filter((item) => item.type === MenuItemType.food)
+                    .map((food, index) => (
+                      <MenuItem item={food} key={index} />
+                    ))}
+                </Box>
+              )}
+              {totalBeverageQty > 0 && (
+                <Box>
+                  <Text fontSize="lg">{totalBeverageQty} minuman:</Text>
+                  {orderedItems
+                    .filter((item) => item.type === MenuItemType.beverage)
+                    .map((beverage, index) => (
+                      <MenuItem item={beverage} key={index} />
+                    ))}
+                </Box>
+              )}
+
+              <Heading fontSize="xl" textAlign="right">
+                Total: {convertToPriceText(totalOrderValue)}
+              </Heading>
+            </ModalBody>
+
+            <ModalFooter>
+              <Text fontWeight="bold" onClick={onClose} marginRight={4}>
+                Kembali
+              </Text>
+              <Button colorScheme="green" onClick={() => handleSubmit()}>
+                Pesan
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </Box>
+    );
+  }
+
   if (!isLoggedIn) {
     return (
       <Flex alignItems="center" height="30vh">
@@ -186,106 +297,6 @@ const MenuForm = () => {
       </Flex>
     );
   }
-
-  return (
-    <Box>
-      <Flex alignItems="center">
-        <Skeleton isLoaded={ready && profileImg && profileImg.length >= 0}>
-          {profileImg && (
-            <Box marginRight={2}>
-              <Avatar src={profileImg} />
-            </Box>
-          )}
-        </Skeleton>
-        <Skeleton isLoaded={ready && displayName && displayName.length >= 0}>
-          <Box>
-            <Text>
-              Halo <b>{displayName}</b>! Yuk pesan makanan di bawah ini
-            </Text>
-          </Box>
-        </Skeleton>
-      </Flex>
-
-      <MenuList {...orderMenuListProps} />
-      {values.items.filter((item) => item.qty > 0).length > 0 ? (
-        <OrderSummary {...orderSummaryProps} />
-      ) : null}
-
-      <Box marginY={4}>
-        {liff.isInClient() ? (
-          <Button
-            isFullWidth
-            colorScheme="orange"
-            textAlign="center"
-            fontStyle="underline"
-            onClick={() =>
-              liff.openWindow({
-                url: "https://yukmakan-order-line.sznm.dev/",
-              })
-            }
-            marginBottom={4}
-          >
-            Buka di Browser Eksternal
-          </Button>
-        ) : null}
-
-        {liff.isLoggedIn() && (
-          <Button isFullWidth onClick={() => liff.logout()}>
-            Logout
-          </Button>
-        )}
-      </Box>
-
-      <Modal
-        isOpen={isOpen}
-        onClose={onClose}
-        isCentered
-        motionPreset="slideInBottom"
-      >
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Sudah Yakin dengan Pesanan Anda?</ModalHeader>
-          <ModalCloseButton />
-
-          <ModalBody>
-            {totalFoodQty > 0 && (
-              <Box marginBottom={6}>
-                <Text fontSize="lg">{totalFoodQty} makanan:</Text>
-                {orderedItems
-                  .filter((item) => item.type === MenuItemType.food)
-                  .map((food, index) => (
-                    <MenuItem item={food} key={index} />
-                  ))}
-              </Box>
-            )}
-            {totalBeverageQty > 0 && (
-              <Box>
-                <Text fontSize="lg">{totalBeverageQty} minuman:</Text>
-                {orderedItems
-                  .filter((item) => item.type === MenuItemType.beverage)
-                  .map((beverage, index) => (
-                    <MenuItem item={beverage} key={index} />
-                  ))}
-              </Box>
-            )}
-
-            <Heading fontSize="xl" textAlign="right">
-              Total: {convertToPriceText(totalOrderValue)}
-            </Heading>
-          </ModalBody>
-
-          <ModalFooter>
-            <Text fontWeight="bold" onClick={onClose} marginRight={4}>
-              Kembali
-            </Text>
-            <Button colorScheme="green" onClick={() => handleSubmit()}>
-              Pesan
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
-  );
 };
 
 export default MenuForm;
