@@ -170,10 +170,12 @@ const MenuForm = () => {
   };
 
   if (error) {
+    console.log({ error, ready, isLoggedIn }, "error");
     return <Text>Something is Wrong</Text>;
   }
 
   if (isLoggedIn) {
+    console.log({ error, ready, isLoggedIn }, "default");
     return (
       <Box>
         <Skeleton
@@ -283,6 +285,7 @@ const MenuForm = () => {
   }
 
   if (!isLoggedIn) {
+    console.log({ error, ready, isLoggedIn }, "not logged in yet");
     return (
       <Flex alignItems="center" height="30vh">
         <Button
